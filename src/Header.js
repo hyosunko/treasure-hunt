@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
 class Header extends Component{
+	constructor(props){
+		super(props)
+		this.state={
+		}
+	}
 	render(){
 
 		let clickRemain = this.props.currentCount
@@ -12,13 +17,12 @@ class Header extends Component{
 		console.log("currentSpace: ",currentSpace)
 		if(this.props.currentId !== 999){
 			if(answerStatus[this.props.currentId] === "💎"){
-				anounce = "You won!!! Please reset the game to start again"
-				var countStyle={color: 'turquoise'}
+				anounce = "You won!!! Please reset the game to start again";
+				var countStyle={color: 'mediumspringgreen'};
 			} else if(this.props.currentCount === 0 || answerStatus[this.props.currentId]==="💣"){
-				anounce = "You lost!!! Please reset the game to start gain"
-				var countStyle={color: 'red'}
+				anounce = "You lost!!! Please reset the game to start gain";
+				var countStyle={color: 'red'};
 			}
-			
 		}
 
 		return(

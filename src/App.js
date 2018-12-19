@@ -7,18 +7,24 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state ={
-      clickId:999,
+      boardSize: 3,
+      clickId: 999,
       counter: 5,
-      answer: ["❓","❓","❓","❓","❓","❓","❓","❓","❓"],
-      spaces: [0,0,0,0,0,0,0,0,0],
+      col : [],
+      answer: [],
+      spaces: [],
     }
     var defaultState=this.state;
   }
 
   componentDidMount(){
-    let {counter, spaces, answer, clickId} = this.state;
+    let {boardSize, counter, spaces, answer, clickId,col} = this.state;
+    spaces = Array(boardSize*boardSize).fill(0);
+    answer = Array(boardSize*boardSize).fill("❓");
+    col = Array(boardSize).fill("150px");
     let treasurePostion = Math.floor(Math.random() * spaces.length)
     let noOfBomb=Math.ceil(spaces.length/10)
+    counter = Math.ceil(spaces.length/2)
     spaces[treasurePostion] = 1
     while(noOfBomb>0){
       let bombPosition =Math.floor(Math.random() * spaces.length)
@@ -27,10 +33,14 @@ class App extends Component {
         noOfBomb--
       }
     }
-    console.log("noOfBomb: ",noOfBomb)
 
+    console.log("noOfBomb: ",noOfBomb)
+    console.log("col: ", col)
+
+    this.setState({col:col})
     this.setState({spaces:spaces})
-    // plantTreasure
+    this.setState({answer:answer})
+    this.setState({counter:counter})
   }
 
   handleChange= e =>{
@@ -50,7 +60,7 @@ class App extends Component {
           spaces[i]=9
         }
         clickId = counterId
-        counter--
+        counter=0
     }  else{
         if(spaces[counterId]!==9){
           if(spaces[counterId]===0){
@@ -82,6 +92,16 @@ class App extends Component {
   }
 
   render() {
+
+    var colStr = this.state.col.join(" ")
+
+    let columnStyle = {
+      margin: '0',
+      display: 'grid',
+      gridTemplateColumns: colStr,
+      justifyContent: 'center',
+    }
+
     let treasureBox = this.state.spaces.map((v,i)=>{
       return(
         <Square id={i} currentSpace={this.state.spaces[i]} answerStatus={this.state.answer[i]} handleChangeFunc={this.handleChange}  /> 
@@ -90,8 +110,8 @@ class App extends Component {
     return (
       <div className="App">
 
-      <Header currentCount={this.state.counter} currentSpace={this.state.spaces} currentId={this.state.clickId} answerStatus={this.state.answer} initFunc={this.state.reset} />
-      <div className="board-list">
+      <Header currentCount={this.state.counter} currentSpace={this.state.spaces} currentId={this.state.clickId} answerStatus={this.state.answer} initFunc={this.state.reset}/>
+      <div style={columnStyle} className="board-list">
         {treasureBox}
       </div>
 

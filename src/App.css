@@ -33,20 +33,21 @@
 
 .board-list{
   /*display: flex;*/
-  /*flex-direction: column;*/
+  /*flex-direction: row;*/
+  /*flex-wrap: wrap;*/
   margin: 0;
   display: grid;
-  grid-template-columns: 200px 200px 200px;
+  /*grid-template-columns: 200px 200px 200px;*/
   justify-content: center;
 }
 
 .square-container{
   display: grid;
-  height: 200px;
-  width: 200px;
+  height: 150px;
+  width: 150px;
   border:1px solid black;
   align-items: center;
-  font-size: 5em;
+  font-size: 4em;
   background-color: #ffffcc;
 }
 
