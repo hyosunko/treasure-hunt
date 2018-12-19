@@ -9,7 +9,7 @@ class App extends Component {
     this.state ={
       clickId:999,
       counter: 5,
-      answer: ["?","?","?","?","?","?","?","?","?"],
+      answer: ["❓","❓","❓","❓","❓","❓","❓","❓","❓"],
       spaces: [0,0,0,0,0,0,0,0,0],
     }
     var defaultState=this.state;
@@ -34,17 +34,18 @@ class App extends Component {
   }
 
   handleChange= e =>{
+    let currentState = this.state
     let counterId = e.target.id;
     let {counter, spaces, answer, clickId} = this.state;
 
     if(spaces[counterId]=== 1 || counter === 1 || spaces[counterId]=== 2){
         for(let i=0;i<spaces.length;i++){
           if(spaces[i]===0){
-            answer[i]="tree"
+            answer[i]="🌴"
           } else if(spaces[i]===1){
-            answer[i]="treasure"
+            answer[i]="💎"
           } else if(spaces[i]===2){
-            answer[i]="bomb"
+            answer[i]="💣"
           }
           spaces[i]=9
         }
@@ -53,21 +54,22 @@ class App extends Component {
     }  else{
         if(spaces[counterId]!==9){
           if(spaces[counterId]===0){
-            answer[counterId]="tree"
+            answer[counterId]="🌴"
           } else if(spaces[counterId]===1){
-            answer[counterId]="treasure"
+            answer[counterId]="💎"
           } else {
-            answer[counterId]="bomb"
+            answer[counterId]="💣"
         }
-        counter--
+        counter --
         clickId = counterId
         spaces[counterId] = 9
      }
     }
-    this.setState({clickId:clickId})
-    this.setState({spaces:spaces})
+    var x = document.getElementById(clickId);
+    x.style.backgroundColor = 'aliceblue';
+    this.setState({currentState:this.state})
     this.setState({counter:counter})
-    this.setState({answer:answer})
+    this.setState({clickId:clickId})
     console.log("counterId: ", counterId)
     console.log("counter: ", counter)
     console.log("spaces: ", spaces)
@@ -75,13 +77,8 @@ class App extends Component {
   }
 
   reset=()=>{
-    let {counter, spaces, answer, clickId} = this.state;
-        this.state = this.defaultState
-
-        this.setState({clickId:clickId})
-        this.setState({counter:counter})
-        this.setState({answer:answer})
-        this.setState(spaces:spaces)
+    let initial = this.state;
+        this.setState({initial:this.defaultState})
   }
 
   render() {

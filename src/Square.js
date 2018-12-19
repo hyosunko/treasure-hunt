@@ -7,7 +7,7 @@ class Square extends Component{
 
 	render(){
 		return (
-			<div className="square-container" id={this.props.id} onClick={this.props.handleChangeFunc} >{this.props.id+1}:{this.props.answerStatus}
+			<div className="square-container" id={this.props.id} onClick={this.props.handleChangeFunc} >{this.props.answerStatus}
 			</div>
 			)
 	}

@@ -10,13 +10,13 @@ class Header extends Component{
 		console.log("clickRemain: ",clickRemain)
 		console.log("anounce: ",anounce)
 		console.log("currentSpace: ",currentSpace)
-		if(this.props.currentId === 999){
-			anounce = anounce
-		} else {
-			if(answerStatus[this.props.currentId] === "treasure" || answerStatus[this.props.currentId]==="bomb"){
+		if(this.props.currentId !== 999){
+			if(answerStatus[this.props.currentId] === "💎"){
 				anounce = "You won!!! Please reset the game to start again"
-			} else if(this.props.currentCount === 0){
+				var countStyle={color: 'turquoise'}
+			} else if(this.props.currentCount === 0 || answerStatus[this.props.currentId]==="💣"){
 				anounce = "You lost!!! Please reset the game to start gain"
+				var countStyle={color: 'red'}
 			}
 			
 		}
@@ -24,9 +24,9 @@ class Header extends Component{
 		return(
 			<div>
 				<h1>Treasure Hunt</h1>
-				<h3>{anounce} </h3>
+				<h2 style={countStyle}>{anounce} </h2>
 				<form onSubmit={this.props.initFunc}>
-					<button type="submit">Reset</button>
+					<button className="button1" type="submit">Reset</button>
 				</form>
 				<p> </p>
 			</div>
