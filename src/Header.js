@@ -18,13 +18,20 @@ class Header extends Component{
 		let winningPercent = 0
 		let winNo=this.props.currentRecord[0]
 		let loseNo=this.props.currentRecord[1]
-		winningPercent = (winNo/(winNo+loseNo)*100).toFixed(0)
+		let totalNo= winNo+loseNo;
+		winningPercent = (winNo/totalNo*100).toFixed(0)
 		// in case of no win/lose record, set winning percent to 0
 		if(isNaN(winningPercent)){winningPercent=0}
 
 		console.log("clickRemain: ",clickRemain)
 		// click message inline color css
 		var announceStyle={color: 'black'};
+		var recordStyle={color: 'midnightblue'};
+		if(winningPercent>50){
+			recordStyle={color: 'limegreen'};
+		} else if(winningPercent<50&&(winNo!==0||loseNo!==0)){
+			recordStyle={color: 'coral'};
+		}
 
 		//game message set up
 		if(this.props.currentCellId !== 999){
@@ -45,7 +52,7 @@ class Header extends Component{
 			<div>
 				<h1>Treasure Hunt</h1>
 				<h2 style={announceStyle}>{announce} </h2>
-				<h3 className="record">Current game records, Won :{this.props.currentRecord[0]} Lost : {this.props.currentRecord[1]} Winning Percent : {winningPercent}%</h3>
+				<h3 style={recordStyle}>No of Games: {totalNo}, Won :{winNo} Lost : {loseNo} Winning Percent : {winningPercent}%</h3>
 				<form onSubmit={this.reset}>
 					<button className="button1" type="submit">Reset</button>
 				</form>

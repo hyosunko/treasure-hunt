@@ -21,18 +21,28 @@ class App extends Component {
 
   componentDidMount(){
     let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent,colWidthArray} = this.state;
-    //initialize board data
+    //initializes board data
+    //fills cell status data with 0
     cellStatus = Array(boardWidth*boardHeight).fill(0);
+    //fills cell display data with "?"
     cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
+    //fills col size data by board width
     colWidthArray = Array(boardWidth).fill("150px");
 
-    //intialize treasure, bomb position & game counter
+    //intializes treasure, bomb position & game counter
+    //selects random treasure position between 0 to length of board
     let treasurePostion = Math.floor(Math.random() * cellStatus.length)
+
+    //selects no of bomb: 10% of board size
     let noOfBomb=Math.ceil(cellStatus.length/10)
+    //selects no of click counter: half of board size
     clickCounter = Math.ceil(cellStatus.length/2)
+    //changes treasure data: 1 by selected position
     cellStatus[treasurePostion] = 1
+    //selects bomb positions by looping
     while(noOfBomb>0){
       let bombPosition =Math.floor(Math.random() * cellStatus.length)
+      //selects bomb position if it is not same as treasure position
       if(bombPosition !== treasurePostion ){
         cellStatus[bombPosition] = 2
         noOfBomb--
@@ -77,7 +87,7 @@ class App extends Component {
         cellId = cellClickedId
         clickCounter=0
     } else{
-        //cell hasn't been clicked and is empty
+        //if cell hasn't been clicked and is empty
         if(cellStatus[cellClickedId]!==9){
           if(cellStatus[cellClickedId]===0){
             cellDisplayContent[cellClickedId]="🌴"
@@ -110,18 +120,15 @@ class App extends Component {
     console.log("defaultState: ", this.defaultState)
   }
 
-  // reset game data
+  // resets board data
   updateBoard=()=>{
-    // let cellBackgroundColor ={
-    //   backgroundColor: 'red'
-    // }
 
     let {boardWidth, boardHeight, clickCounter, cellStatus, cellDisplayContent, record, clickedCellArray} = this.state;
-    //initialize board data
+    //initializes board data
     cellStatus = Array(boardWidth*boardHeight).fill(0);
     cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
 
-    //intialize treasure, bomb position & game counter
+    //intializes treasure, bomb position & game counter
     let treasurePostion = Math.floor(Math.random() * cellStatus.length)
     let noOfBomb=Math.ceil(cellStatus.length/10)
     clickCounter = Math.ceil(cellStatus.length/2)
@@ -134,11 +141,11 @@ class App extends Component {
       }
     }
 
-    // resets cell background all clicked cell objects
+    // resets cell background color of all clicked cells
     for(let i=0;i<clickedCellArray.length;i++){
       clickedCellArray[i].style.backgroundColor = 'beige'
     }
-    // empty clicked cell info
+    // empty clicked cells info
     clickedCellArray=[]
 
     console.log("clickedCellArray after: ",clickedCellArray)
@@ -148,9 +155,6 @@ class App extends Component {
     this.setState({cellStatus:cellStatus, cellDisplayContent:cellDisplayContent, clickCounter:clickCounter, boardWidth:boardWidth, boardHeight:boardHeight, record:record, clickedCellArray:clickedCellArray})
   }
 
-  // componentDidUpdate(){
-  //   updateBoard()
-  // }
   render() {
 
     // create column grid data
@@ -164,24 +168,23 @@ class App extends Component {
       justifyContent: 'center',
     }
 
-
     // create board data
     let boardCell = this.state.cellStatus.map((v,i)=>{
       return(
         <Square id={i} currentSpace={this.state.cellStatus[i]} cellDisplayContentStatus={this.state.cellDisplayContent[i]} handleChangeFunc={this.handleChange}  />
         )
     })
-    return (
-      <div className="App">
-        {/*Title & counter remain data*/}
-        <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.updateBoard} currentRecord={this.state.record}/>
+      return (
+        <div className="App">
+          {/*Title & counter remain data*/}
+          <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.updateBoard} currentRecord={this.state.record}/>
 
-        {/*board*/}
-        <div style={columnStyle} className="board-list">
-          {boardCell}
+          {/*board*/}
+          <div style={columnStyle} className="board-list">
+            {boardCell}
+          </div>
         </div>
-      </div>
-    );
+      );
   }
 }
 
