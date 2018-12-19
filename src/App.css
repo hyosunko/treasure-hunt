@@ -18,19 +18,8 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
+{/*board*/}
 .board-list{
   /*display: flex;*/
   /*flex-direction: row;*/
@@ -41,6 +30,7 @@
   justify-content: center;
 }
 
+{/*board cell*/}
 .square-container{
   display: grid;
   height: 150px;
@@ -51,10 +41,7 @@
   background-color: #ffffcc;
 }
 
-#box{
-  background-color: #ccd9ff;
-}
-
+{/*reset button*/}
 .button1 {
   background-color: #944dff;
   border: none;

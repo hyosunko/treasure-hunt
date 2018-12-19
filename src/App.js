@@ -7,94 +7,112 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state ={
-      boardSize: 3,
-      clickId: 999,
-      counter: 5,
-      col : [],
-      answer: [],
-      spaces: [],
+      boardWidth: 3,
+      boardHeight: 2,
+      cellId: 999,
+      gameCounter: 5,
+      colWidth : [],
+      cellDisplayContent: [],
+      cellStatus: [],
+      record:[0,0]
     }
-    var defaultState=this.state;
   }
 
   componentDidMount(){
-    let {boardSize, counter, spaces, answer, clickId,col} = this.state;
-    spaces = Array(boardSize*boardSize).fill(0);
-    answer = Array(boardSize*boardSize).fill("❓");
-    col = Array(boardSize).fill("150px");
-    let treasurePostion = Math.floor(Math.random() * spaces.length)
-    let noOfBomb=Math.ceil(spaces.length/10)
-    counter = Math.ceil(spaces.length/2)
-    spaces[treasurePostion] = 1
+    let {boardWidth,boardHeight, gameCounter, cellStatus, cellDisplayContent, cellId,colWidth} = this.state;
+    //initialize board data
+    cellStatus = Array(boardWidth*boardHeight).fill(0);
+    cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
+    colWidth = Array(boardWidth).fill("150px");
+
+    //intialize treasure, bomb position & game counter
+    let treasurePostion = Math.floor(Math.random() * cellStatus.length)
+    let noOfBomb=Math.ceil(cellStatus.length/10)
+    gameCounter = Math.ceil(cellStatus.length/2)
+    cellStatus[treasurePostion] = 1
     while(noOfBomb>0){
-      let bombPosition =Math.floor(Math.random() * spaces.length)
+      let bombPosition =Math.floor(Math.random() * cellStatus.length)
       if(bombPosition !== treasurePostion ){
-        spaces[bombPosition] = 2
+        cellStatus[bombPosition] = 2
         noOfBomb--
       }
     }
 
     console.log("noOfBomb: ",noOfBomb)
-    console.log("col: ", col)
+    console.log("colWidth: ", colWidth)
+    console.log("cellStatus: ", cellStatus)
 
-    this.setState({col:col})
-    this.setState({spaces:spaces})
-    this.setState({answer:answer})
-    this.setState({counter:counter})
+    this.setState({colWidth:colWidth})
+    this.setState({cellStatus:cellStatus})
+    this.setState({cellDisplayContent:cellDisplayContent})
+    this.setState({gameCounter:gameCounter})
   }
 
+  //cell clicked event hanlding function
   handleChange= e =>{
     let currentState = this.state
-    let counterId = e.target.id;
-    let {counter, spaces, answer, clickId} = this.state;
+    let cellClickedId = e.target.id;
+    let {gameCounter, cellStatus, cellDisplayContent, cellId, record} = this.state;
 
-    if(spaces[counterId]=== 1 || counter === 1 || spaces[counterId]=== 2){
-        for(let i=0;i<spaces.length;i++){
-          if(spaces[i]===0){
-            answer[i]="🌴"
-          } else if(spaces[i]===1){
-            answer[i]="💎"
-          } else if(spaces[i]===2){
-            answer[i]="💣"
+    //if clicked treasure=1, bomb=2 or game counter is one remain and cell status is not been clicked=9
+    if((cellStatus[cellClickedId]=== 1 || gameCounter === 1 || cellStatus[cellClickedId]=== 2)&&cellStatus[cellClickedId]!==9){
+        for(let i=0;i<cellStatus.length;i++){
+          if(cellStatus[i]===1){
+            cellDisplayContent[i]="💎"
+          } else if(cellStatus[i]===2){
+            cellDisplayContent[i]="💣"
           }
-          spaces[i]=9
+          cellStatus[i]=9
         }
-        clickId = counterId
-        counter=0
+
+        // if(cellStatus[counterId]===1){
+        //     record[0]++
+        // } else{
+        //     record[1]++
+        // }
+        cellId = cellClickedId
+        gameCounter=0
     }  else{
-        if(spaces[counterId]!==9){
-          if(spaces[counterId]===0){
-            answer[counterId]="🌴"
-          } else if(spaces[counterId]===1){
-            answer[counterId]="💎"
-          } else {
-            answer[counterId]="💣"
-        }
-        counter --
-        clickId = counterId
-        spaces[counterId] = 9
+        //cell hasn't been clicked
+        if(cellStatus[cellClickedId]!==9){
+          if(cellStatus[cellClickedId]===0){
+            cellDisplayContent[cellClickedId]="🌴"
+          }
+        gameCounter --
+        cellId = cellClickedId
+        cellStatus[cellClickedId] = 9
      }
     }
-    var x = document.getElementById(clickId);
+
+    //change of cell color clicked
+    var x = document.getElementById(cellId);
     x.style.backgroundColor = 'aliceblue';
+
     this.setState({currentState:this.state})
-    this.setState({counter:counter})
-    this.setState({clickId:clickId})
-    console.log("counterId: ", counterId)
-    console.log("counter: ", counter)
-    console.log("spaces: ", spaces)
-    console.log("answer: ", answer)
+    this.setState({gameCounter:gameCounter})
+    this.setState({cellId:cellId})
+    this.setState({record:record})
+    console.log("cellClickedId: ", cellClickedId)
+    console.log("game counter: ", gameCounter)
+    console.log("cellStatus: ", cellStatus)
+    console.log("cellDisplayContent: ", cellDisplayContent)
+    console.log("record: ", record)
+    console.log("defaultState: ", this.defaultState)
   }
 
+  // reset game data
   reset=()=>{
     let initial = this.state;
-        this.setState({initial:this.defaultState})
+    this.setState({initial:[]})
+
   }
 
   render() {
 
-    var colStr = this.state.col.join(" ")
+    // create column grid data
+    var colStr = this.state.colWidth.join(" ")
 
+    // setup inline style data
     let columnStyle = {
       margin: '0',
       display: 'grid',
@@ -102,20 +120,21 @@ class App extends Component {
       justifyContent: 'center',
     }
 
-    let treasureBox = this.state.spaces.map((v,i)=>{
+    // create board data
+    let treasureBox = this.state.cellStatus.map((v,i)=>{
       return(
-        <Square id={i} currentSpace={this.state.spaces[i]} answerStatus={this.state.answer[i]} handleChangeFunc={this.handleChange}  /> 
+        <Square id={i} currentSpace={this.state.cellStatus[i]} cellDisplayContentStatus={this.state.cellDisplayContent[i]} handleChangeFunc={this.handleChange}  /> 
         )
     })
     return (
       <div className="App">
-
-      <Header currentCount={this.state.counter} currentSpace={this.state.spaces} currentId={this.state.clickId} answerStatus={this.state.answer} initFunc={this.state.reset}/>
-      <div style={columnStyle} className="board-list">
-        {treasureBox}
-      </div>
-
-
+        {/*Title & counter remain data*/}
+        <Header currentGameCounter={this.state.gameCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.state.reset}/>
+        
+        {/*board*/}
+        <div style={columnStyle} className="board-list">
+          {treasureBox}
+        </div>
       </div>
     );
   }
