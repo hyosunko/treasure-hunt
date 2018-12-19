@@ -1,12 +1,26 @@
 import React, { Component } from 'react';
 
 class Header extends Component{
-
+	// reset board contents
+	reset=(e)=>{
+		// prevent page refresh
+		e.preventDefault()
+		// call board initialize function
+		this.props.initFunc()
+	}
 	render(){
 
 		let clickRemain = this.props.currentClickCounter
 		let announce ="Click Count Remain : " + clickRemain
 		let cellDisplayContentStatus = this.props.cellDisplayContentStatus
+
+		//calculate winning percentage
+		let winningPercent = 0
+		let winNo=this.props.currentRecord[0]
+		let loseNo=this.props.currentRecord[1]
+		winningPercent = (winNo/(winNo+loseNo)*100).toFixed(0)
+		// in case of no win/lose record, set winning percent to 0
+		if(isNaN(winningPercent)){winningPercent=0}
 
 		console.log("clickRemain: ",clickRemain)
 		// click message inline color css
@@ -25,11 +39,14 @@ class Header extends Component{
 			}
 		}
 
+
 		return(
+
 			<div>
 				<h1>Treasure Hunt</h1>
 				<h2 style={announceStyle}>{announce} </h2>
-				<form onSubmit={this.props.initFunc}>
+				<h3 className="record">Current game records, Won :{this.props.currentRecord[0]} Lost : {this.props.currentRecord[1]} Winning Percent : {winningPercent}%</h3>
+				<form onSubmit={this.reset}>
 					<button className="button1" type="submit">Reset</button>
 				</form>
 				<p> </p>

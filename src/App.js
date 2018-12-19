@@ -14,7 +14,8 @@ class App extends Component {
       colWidthArray : [],
       cellDisplayContent: [],
       cellStatus: [],
-      record:[0,0]
+      record:[0,0],
+      clickedCellArray:[]
     }
   }
 
@@ -61,18 +62,22 @@ class App extends Component {
           } else if(cellStatus[i]===2){
             cellDisplayContent[i]="💣"
           }
-          cellStatus[i]=9
         }
 
+        //increases win or lose records
         if(cellStatus[cellClickedId]===1){
             record[0]++
         } else{
             record[1]++
         }
+        console.log("cellClickedId: ", cellClickedId);
+        console.log("Cell Status cellClickedId: ", cellStatus[cellClickedId]);
+        //resets cell status, click counter
+        cellStatus.fill(9)
         cellId = cellClickedId
         clickCounter=0
-    }  else{
-        //cell hasn't been clicked
+    } else{
+        //cell hasn't been clicked and is empty
         if(cellStatus[cellClickedId]!==9){
           if(cellStatus[cellClickedId]===0){
             cellDisplayContent[cellClickedId]="🌴"
@@ -83,14 +88,20 @@ class App extends Component {
      }
     }
 
-    //change of cell color clicked
+    //changes of cell color clicked
+    var {clickedCellArray}=this.state;
     var x = document.getElementById(cellId);
     x.style.backgroundColor = 'aliceblue';
+    clickedCellArray.push(x);
+    //collects clicked cell objects to array
+    this.setState({clickedCellArray:clickedCellArray})
+    console.log("clickedCellArray: ",clickedCellArray);
 
     this.setState({currentState:this.state})
     this.setState({clickCounter:clickCounter})
     this.setState({cellId:cellId})
     this.setState({record:record})
+
     console.log("cellClickedId: ", cellClickedId)
     console.log("click counter: ", clickCounter)
     console.log("cellStatus: ", cellStatus)
@@ -101,8 +112,11 @@ class App extends Component {
 
   // reset game data
   updateBoard=()=>{
+    // let cellBackgroundColor ={
+    //   backgroundColor: 'red'
+    // }
 
-    let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent} = this.state;
+    let {boardWidth, boardHeight, clickCounter, cellStatus, cellDisplayContent, record, clickedCellArray} = this.state;
     //initialize board data
     cellStatus = Array(boardWidth*boardHeight).fill(0);
     cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
@@ -120,12 +134,18 @@ class App extends Component {
       }
     }
 
+    // resets cell background all clicked cell objects
+    for(let i=0;i<clickedCellArray.length;i++){
+      clickedCellArray[i].style.backgroundColor = 'beige'
+    }
+    // empty clicked cell info
+    clickedCellArray=[]
+
+    console.log("clickedCellArray after: ",clickedCellArray)
     console.log("reset noOfBomb: ",noOfBomb)
     console.log("reset cellStatus: ", cellStatus)
 
-    this.setState({cellStatus:cellStatus})
-    this.setState({cellDisplayContent:cellDisplayContent})
-    this.setState({clickCounter:clickCounter})
+    this.setState({cellStatus:cellStatus, cellDisplayContent:cellDisplayContent, clickCounter:clickCounter, boardWidth:boardWidth, boardHeight:boardHeight, record:record, clickedCellArray:clickedCellArray})
   }
 
   // componentDidUpdate(){
@@ -144,16 +164,17 @@ class App extends Component {
       justifyContent: 'center',
     }
 
+
     // create board data
     let boardCell = this.state.cellStatus.map((v,i)=>{
       return(
-        <Square id={i} currentSpace={this.state.cellStatus[i]} cellDisplayContentStatus={this.state.cellDisplayContent[i]} handleChangeFunc={this.handleChange}  /> 
+        <Square id={i} currentSpace={this.state.cellStatus[i]} cellDisplayContentStatus={this.state.cellDisplayContent[i]} handleChangeFunc={this.handleChange}  />
         )
     })
     return (
       <div className="App">
         {/*Title & counter remain data*/}
-        <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.state.updateBoard}/>
+        <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.updateBoard} currentRecord={this.state.record}/>
 
         {/*board*/}
         <div style={columnStyle} className="board-list">
