@@ -10,8 +10,8 @@ class App extends Component {
       boardWidth: 3,
       boardHeight: 2,
       cellId: 999,
-      gameCounter: 5,
-      colWidth : [],
+      clickCounter: 5,
+      colWidthArray : [],
       cellDisplayContent: [],
       cellStatus: [],
       record:[0,0]
@@ -19,16 +19,16 @@ class App extends Component {
   }
 
   componentDidMount(){
-    let {boardWidth,boardHeight, gameCounter, cellStatus, cellDisplayContent, cellId,colWidth} = this.state;
+    let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent,colWidthArray} = this.state;
     //initialize board data
     cellStatus = Array(boardWidth*boardHeight).fill(0);
     cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
-    colWidth = Array(boardWidth).fill("150px");
+    colWidthArray = Array(boardWidth).fill("150px");
 
     //intialize treasure, bomb position & game counter
     let treasurePostion = Math.floor(Math.random() * cellStatus.length)
     let noOfBomb=Math.ceil(cellStatus.length/10)
-    gameCounter = Math.ceil(cellStatus.length/2)
+    clickCounter = Math.ceil(cellStatus.length/2)
     cellStatus[treasurePostion] = 1
     while(noOfBomb>0){
       let bombPosition =Math.floor(Math.random() * cellStatus.length)
@@ -39,23 +39,22 @@ class App extends Component {
     }
 
     console.log("noOfBomb: ",noOfBomb)
-    console.log("colWidth: ", colWidth)
+    console.log("colWidthArray: ", colWidthArray)
     console.log("cellStatus: ", cellStatus)
 
-    this.setState({colWidth:colWidth})
+    this.setState({colWidthArray:colWidthArray})
     this.setState({cellStatus:cellStatus})
     this.setState({cellDisplayContent:cellDisplayContent})
-    this.setState({gameCounter:gameCounter})
+    this.setState({clickCounter:clickCounter})
   }
 
   //cell clicked event hanlding function
   handleChange= e =>{
-    let currentState = this.state
     let cellClickedId = e.target.id;
-    let {gameCounter, cellStatus, cellDisplayContent, cellId, record} = this.state;
+    let {clickCounter, cellStatus, cellDisplayContent, cellId, record} = this.state;
 
     //if clicked treasure=1, bomb=2 or game counter is one remain and cell status is not been clicked=9
-    if((cellStatus[cellClickedId]=== 1 || gameCounter === 1 || cellStatus[cellClickedId]=== 2)&&cellStatus[cellClickedId]!==9){
+    if((cellStatus[cellClickedId]=== 1 || clickCounter === 1 || cellStatus[cellClickedId]=== 2)&&cellStatus[cellClickedId]!==9){
         for(let i=0;i<cellStatus.length;i++){
           if(cellStatus[i]===1){
             cellDisplayContent[i]="💎"
@@ -65,20 +64,20 @@ class App extends Component {
           cellStatus[i]=9
         }
 
-        // if(cellStatus[counterId]===1){
-        //     record[0]++
-        // } else{
-        //     record[1]++
-        // }
+        if(cellStatus[cellClickedId]===1){
+            record[0]++
+        } else{
+            record[1]++
+        }
         cellId = cellClickedId
-        gameCounter=0
+        clickCounter=0
     }  else{
         //cell hasn't been clicked
         if(cellStatus[cellClickedId]!==9){
           if(cellStatus[cellClickedId]===0){
             cellDisplayContent[cellClickedId]="🌴"
           }
-        gameCounter --
+        clickCounter --
         cellId = cellClickedId
         cellStatus[cellClickedId] = 9
      }
@@ -89,11 +88,11 @@ class App extends Component {
     x.style.backgroundColor = 'aliceblue';
 
     this.setState({currentState:this.state})
-    this.setState({gameCounter:gameCounter})
+    this.setState({clickCounter:clickCounter})
     this.setState({cellId:cellId})
     this.setState({record:record})
     console.log("cellClickedId: ", cellClickedId)
-    console.log("game counter: ", gameCounter)
+    console.log("click counter: ", clickCounter)
     console.log("cellStatus: ", cellStatus)
     console.log("cellDisplayContent: ", cellDisplayContent)
     console.log("record: ", record)
@@ -101,27 +100,52 @@ class App extends Component {
   }
 
   // reset game data
-  reset=()=>{
-    let initial = this.state;
-    this.setState({initial:[]})
+  updateBoard=()=>{
 
+    let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent} = this.state;
+    //initialize board data
+    cellStatus = Array(boardWidth*boardHeight).fill(0);
+    cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
+
+    //intialize treasure, bomb position & game counter
+    let treasurePostion = Math.floor(Math.random() * cellStatus.length)
+    let noOfBomb=Math.ceil(cellStatus.length/10)
+    clickCounter = Math.ceil(cellStatus.length/2)
+    cellStatus[treasurePostion] = 1
+    while(noOfBomb>0){
+      let bombPosition =Math.floor(Math.random() * cellStatus.length)
+      if(bombPosition !== treasurePostion ){
+        cellStatus[bombPosition] = 2
+        noOfBomb--
+      }
+    }
+
+    console.log("reset noOfBomb: ",noOfBomb)
+    console.log("reset cellStatus: ", cellStatus)
+
+    this.setState({cellStatus:cellStatus})
+    this.setState({cellDisplayContent:cellDisplayContent})
+    this.setState({clickCounter:clickCounter})
   }
 
+  // componentDidUpdate(){
+  //   updateBoard()
+  // }
   render() {
 
     // create column grid data
-    var colStr = this.state.colWidth.join(" ")
+    var colDataStr = this.state.colWidthArray.join(" ")
 
     // setup inline style data
     let columnStyle = {
       margin: '0',
       display: 'grid',
-      gridTemplateColumns: colStr,
+      gridTemplateColumns: colDataStr,
       justifyContent: 'center',
     }
 
     // create board data
-    let treasureBox = this.state.cellStatus.map((v,i)=>{
+    let boardCell = this.state.cellStatus.map((v,i)=>{
       return(
         <Square id={i} currentSpace={this.state.cellStatus[i]} cellDisplayContentStatus={this.state.cellDisplayContent[i]} handleChangeFunc={this.handleChange}  /> 
         )
@@ -129,11 +153,11 @@ class App extends Component {
     return (
       <div className="App">
         {/*Title & counter remain data*/}
-        <Header currentGameCounter={this.state.gameCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.state.reset}/>
-        
+        <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.state.updateBoard}/>
+
         {/*board*/}
         <div style={columnStyle} className="board-list">
-          {treasureBox}
+          {boardCell}
         </div>
       </div>
     );

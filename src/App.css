@@ -39,11 +39,12 @@
   align-items: center;
   font-size: 4em;
   background-color: #ffffcc;
+  cursor: pointer;
 }
 
 {/*reset button*/}
 .button1 {
-  background-color: #944dff;
+  background-color: #0E89C7;
   border: none;
   color: white;
   font-size: 1em;
@@ -53,9 +54,11 @@
   width: 80px;
   border-radius: 999px;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  cursor: pointer;
+
 }
 
 .button1:hover {
-  background-color: #7300e6;
+  background-color: #E8134F;
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
