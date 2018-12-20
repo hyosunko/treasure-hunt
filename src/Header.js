@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
+
 class Header extends Component{
+
 	// reset board contents
 	reset=(e)=>{
 		// prevent page refresh
@@ -9,8 +11,16 @@ class Header extends Component{
 		this.props.initFunc()
 	}
 
+	// resize board contents
+	resize= e=>{
+		e.preventDefault()
+		// call board resize function
+		this.props.resizeBoardFunc()
+	}
+
 	render(){
 
+    
 		let clickRemain = this.props.currentClickCounter
 		let announce ="Click Count Remain : " + clickRemain
 		let cellDisplayContentStatus = this.props.cellDisplayContentStatus
@@ -26,7 +36,38 @@ class Header extends Component{
 
 		console.log("clickRemain: ",clickRemain)
 		// click message inline color css
-		var announceStyle={color: 'black'};
+		if(clickRemain>2){
+			var announceStyle={color: 'black'};
+		} else {
+		    let styleSheet = document.styleSheets[0];
+		    let animationName = `bliner`;
+		    let keyframes =
+		    `@-webkit-keyframes ${animationName} {
+		    		0%{		color: crimson;	}
+					7%{		color: transparent;	}
+					14%{	color: lime;	}
+					21%{	color: transparent;	}
+					28%{	color: deeppink;	}
+					35%{	color: transparent;	}
+					42%{	color: steelblue;	}
+					49%{	color: transparent;	}
+					56%{	color: fuchsia;	}
+					63%{	color: transparent;	}
+					70%{	color: springgreen;	}
+					77%{	color: transparent;	}
+					84%{	color: goldenrod;	}
+					91%{	color: transparent;	}
+					100%{	color: crimson;	}
+		    }`;
+		 	styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+			var announceStyle={
+				color: 'red',
+			    animationName: animationName,
+			    animationTimingFunction: 'ease-in-out',
+			    animationDuration: '7s',
+			    animationIterationCount: 'infinite',
+			};
+		}
 		var recordStyle={color: 'midnightblue'};
 		if(winningPercent>50){
 			recordStyle={color: 'limegreen'};
@@ -47,11 +88,27 @@ class Header extends Component{
 			}
 		}
 
+	    let inputSubmitStyle ={
+	      width:'auto'
+	    }
 
 		return(
 			<div>
 				<h1>Treasure Hunt</h1>
+
+		        {/*board resize form*/}
+		        <div>
+			    	<form onSubmit={this.resize}>
+			        	<h3>Do you want to resize board?<br/> 
+			            Width: <input type="number" id="width" min="2" max="10" required/>
+			            Height: <input type="number" id="height" min="1" max="10" required/>
+			            <input className="space" style={inputSubmitStyle} type="submit" value="Submit" />
+			            </h3>
+			        </form>
+		        </div>
+
 				<h2 style={announceStyle}>{announce} </h2>
+
 				<h3 style={recordStyle}>No of Games: {totalNo}, Won :{winNo} Lost : {loseNo} <br/>
 				 Winning Percent : {winningPercent}%</h3>
 				<form onSubmit={this.reset}>

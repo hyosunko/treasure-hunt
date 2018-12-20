@@ -148,11 +148,9 @@ class App extends Component {
 
     this.setState({cellStatus:cellStatus, cellDisplayContent:cellDisplayContent, clickCounter:clickCounter, boardWidth:boardWidth, boardHeight:boardHeight, record:record, clickedCellArray:clickedCellArray})
   }
-  
-  // resets board data
-  resizeBoard=(e)=>{
 
-    e.preventDefault()
+  // resets board data
+  resizeBoard=()=>{
 
     let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent,colWidthArray, clickedCellArray} = this.state;
     boardWidth=parseInt(document.getElementById("width").value);
@@ -213,11 +211,6 @@ class App extends Component {
       justifyContent: 'center',
     }
 
-    let inputSubmitStyle ={
-      width:'auto'
-    }
-
-
     // create board data
     let boardCell = this.state.cellStatus.map((v,i)=>{
       return(
@@ -227,23 +220,11 @@ class App extends Component {
       return (
         <div className="App">
           {/*Title & counter remain data*/}
-          <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.updateBoard} currentRecord={this.state.record} boardWidth={this.state.boardWidth} boardHeight={this.state.boardHeight} />
+          <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.updateBoard} currentRecord={this.state.record} boardWidth={this.state.boardWidth} boardHeight={this.state.boardHeight} resizeBoardFunc={this.resizeBoard} />
 
           {/*board*/}
           <div style={columnStyle} className="board-list">
             {boardCell}
-          </div>
-          <div>
-          <br/>
-          {/*board resize form*/}
-          <form onSubmit={this.resizeBoard}>
-            <h3>
-              Do you want to resize board?<br/> 
-              Col: <input type="number" id="width" min="2" max="10" required/>
-              Row: <input type="number" id="height" min="1" max="10" required/> 
-              <input style={inputSubmitStyle} type="submit" value="Submit" />
-            </h3>
-          </form>
           </div>
         </div>
       );

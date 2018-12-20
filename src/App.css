@@ -72,3 +72,8 @@ input{
   text-align: center;
   font-size: 0.9em;
 }
+
+.space{
+  margin-left: 10px;
+  margin-right: 10px;
+}
