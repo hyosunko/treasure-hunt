@@ -8,6 +8,7 @@ class Header extends Component{
 		// call board initialize function
 		this.props.initFunc()
 	}
+
 	render(){
 
 		let clickRemain = this.props.currentClickCounter
@@ -48,11 +49,11 @@ class Header extends Component{
 
 
 		return(
-
 			<div>
 				<h1>Treasure Hunt</h1>
 				<h2 style={announceStyle}>{announce} </h2>
-				<h3 style={recordStyle}>No of Games: {totalNo}, Won :{winNo} Lost : {loseNo} Winning Percent : {winningPercent}%</h3>
+				<h3 style={recordStyle}>No of Games: {totalNo}, Won :{winNo} Lost : {loseNo} <br/>
+				 Winning Percent : {winningPercent}%</h3>
 				<form onSubmit={this.reset}>
 					<button className="button1" type="submit">Reset</button>
 				</form>

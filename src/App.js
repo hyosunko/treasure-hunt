@@ -8,7 +8,7 @@ class App extends Component {
     super(props)
     this.state ={
       boardWidth: 3,
-      boardHeight: 2,
+      boardHeight: 3,
       cellId: 999,
       clickCounter: 5,
       colWidthArray : [],
@@ -53,10 +53,7 @@ class App extends Component {
     console.log("colWidthArray: ", colWidthArray)
     console.log("cellStatus: ", cellStatus)
 
-    this.setState({colWidthArray:colWidthArray})
-    this.setState({cellStatus:cellStatus})
-    this.setState({cellDisplayContent:cellDisplayContent})
-    this.setState({clickCounter:clickCounter})
+    this.setState({colWidthArray:colWidthArray, cellStatus:cellStatus, cellDisplayContent:cellDisplayContent, clickCounter:clickCounter})
   }
 
   //cell clicked event hanlding function
@@ -107,10 +104,7 @@ class App extends Component {
     this.setState({clickedCellArray:clickedCellArray})
     console.log("clickedCellArray: ",clickedCellArray);
 
-    this.setState({currentState:this.state})
-    this.setState({clickCounter:clickCounter})
-    this.setState({cellId:cellId})
-    this.setState({record:record})
+    this.setState({currentState:this.state, clickCounter:clickCounter, cellId:cellId, record:record})
 
     console.log("cellClickedId: ", cellClickedId)
     console.log("click counter: ", clickCounter)
@@ -154,6 +148,57 @@ class App extends Component {
 
     this.setState({cellStatus:cellStatus, cellDisplayContent:cellDisplayContent, clickCounter:clickCounter, boardWidth:boardWidth, boardHeight:boardHeight, record:record, clickedCellArray:clickedCellArray})
   }
+  
+  // resets board data
+  resizeBoard=(e)=>{
+
+    e.preventDefault()
+
+    let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent,colWidthArray, clickedCellArray} = this.state;
+    boardWidth=parseInt(document.getElementById("width").value);
+    boardHeight=parseInt(document.getElementById("height").value);
+    //initializes board data
+    //fills cell status data with 0
+    cellStatus = Array(boardWidth*boardHeight).fill(0);
+    //fills cell display data with "?"
+    cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
+    //fills col size data by board width
+    colWidthArray = Array(boardWidth).fill("150px");
+
+    //intializes treasure, bomb position & game counter
+    //selects random treasure position between 0 to length of board
+    let treasurePostion = Math.floor(Math.random() * cellStatus.length)
+
+    //selects no of bomb: 10% of board size
+    let noOfBomb=Math.ceil(cellStatus.length/10)
+    //selects no of click counter: half of board size
+    clickCounter = Math.ceil(cellStatus.length/2)
+    //changes treasure data: 1 by selected position
+    cellStatus[treasurePostion] = 1
+    //selects bomb positions by looping
+    while(noOfBomb>0){
+      let bombPosition =Math.floor(Math.random() * cellStatus.length)
+      //selects bomb position if it is not same as treasure position
+      if(bombPosition !== treasurePostion ){
+        cellStatus[bombPosition] = 2
+        noOfBomb--
+      }
+    }
+
+    for(let i=0;i<clickedCellArray.length;i++){
+      clickedCellArray[i].style.backgroundColor = 'beige'
+    }
+    // empty clicked cells info
+    clickedCellArray=[]
+
+
+    console.log("noOfBomb: ",noOfBomb)
+    console.log("colWidthArray: ", colWidthArray)
+    console.log("cellStatus: ", cellStatus)
+
+    this.setState({colWidthArray:colWidthArray, cellStatus:cellStatus, cellDisplayContent:cellDisplayContent, clickCounter:clickCounter, boardWidth:boardWidth, boardHeight:boardHeight, clickedCellArray:clickedCellArray})
+
+  }
 
   render() {
 
@@ -168,6 +213,11 @@ class App extends Component {
       justifyContent: 'center',
     }
 
+    let inputSubmitStyle ={
+      width:'auto'
+    }
+
+
     // create board data
     let boardCell = this.state.cellStatus.map((v,i)=>{
       return(
@@ -177,11 +227,23 @@ class App extends Component {
       return (
         <div className="App">
           {/*Title & counter remain data*/}
-          <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.updateBoard} currentRecord={this.state.record}/>
+          <Header currentClickCounter={this.state.clickCounter} currentCellId={this.state.cellId} cellDisplayContentStatus={this.state.cellDisplayContent} initFunc={this.updateBoard} currentRecord={this.state.record} boardWidth={this.state.boardWidth} boardHeight={this.state.boardHeight} />
 
           {/*board*/}
           <div style={columnStyle} className="board-list">
             {boardCell}
+          </div>
+          <div>
+          <br/>
+          {/*board resize form*/}
+          <form onSubmit={this.resizeBoard}>
+            <h3>
+              Do you want to resize board?<br/> 
+              Col: <input type="number" id="width" min="2" max="10" required/>
+              Row: <input type="number" id="height" min="1" max="10" required/> 
+              <input style={inputSubmitStyle} type="submit" value="Submit" />
+            </h3>
+          </form>
           </div>
         </div>
       );
