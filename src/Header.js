@@ -22,7 +22,7 @@ class Header extends Component{
 
     
 		let clickRemain = this.props.currentClickCounter
-		let announce ="Click Count Remain : " + clickRemain
+		let announce ="Remain Click Counts : " + clickRemain
 		let cellDisplayContentStatus = this.props.cellDisplayContentStatus
 
 		//calculate winning percentage
@@ -36,38 +36,52 @@ class Header extends Component{
 
 		console.log("clickRemain: ",clickRemain)
 		// click message inline color css
+	    let styleSheet = document.styleSheets[0];
+	    let animationName = `bliner`;
+	    let aniDuration= '7s';
+	    let keyframes =
+	    `@-webkit-keyframes ${animationName} {
+	    		0%{color: crimson;}
+				7%{color: transparent;}
+				14%{color: lime;}
+				21%{color: transparent;}
+				28%{color: deeppink;}
+				35%{color: transparent;}
+				42%{color: steelblue;}
+				49%{color: transparent;}
+				56%{color: fuchsia;}
+				63%{color: transparent;}
+				70%{color: springgreen;}
+				77%{color: transparent;}
+				84%{color: goldenrod;}
+				91%{color: transparent;}
+				100%{color: crimson;}
+	    }`;
+		styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+
+		//select animation for click remains > 2 then black color		
 		if(clickRemain>2){
 			var announceStyle={color: 'black'};
-		} else {
-		    let styleSheet = document.styleSheets[0];
-		    let animationName = `bliner`;
-		    let keyframes =
-		    `@-webkit-keyframes ${animationName} {
-		    		0%{		color: crimson;	}
-					7%{		color: transparent;	}
-					14%{	color: lime;	}
-					21%{	color: transparent;	}
-					28%{	color: deeppink;	}
-					35%{	color: transparent;	}
-					42%{	color: steelblue;	}
-					49%{	color: transparent;	}
-					56%{	color: fuchsia;	}
-					63%{	color: transparent;	}
-					70%{	color: springgreen;	}
-					77%{	color: transparent;	}
-					84%{	color: goldenrod;	}
-					91%{	color: transparent;	}
-					100%{	color: crimson;	}
-		    }`;
-		 	styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+		//click remain =2, blinking color anim.
+		} else if(clickRemain>1){
 			var announceStyle={
-				color: 'red',
 			    animationName: animationName,
 			    animationTimingFunction: 'ease-in-out',
-			    animationDuration: '7s',
+			    animationDuration: aniDuration,
+			    animationIterationCount: 'infinite',
+			};
+		//click remain =1, faster blinking 
+		} else {
+			aniDuration= '3s'
+			var announceStyle={
+			    animationName: animationName,
+			    animationTimingFunction: 'ease-in-out',
+			    animationDuration: aniDuration,
 			    animationIterationCount: 'infinite',
 			};
 		}
+
+		//change colors by winning percentages
 		var recordStyle={color: 'midnightblue'};
 		if(winningPercent>50){
 			recordStyle={color: 'limegreen'};
@@ -88,6 +102,7 @@ class Header extends Component{
 			}
 		}
 
+		//Submit button size setup
 	    let inputSubmitStyle ={
 	      width:'auto'
 	    }
@@ -107,10 +122,13 @@ class Header extends Component{
 			        </form>
 		        </div>
 
+		        {/*click counter message & win or lose message*/}
 				<h2 style={announceStyle}>{announce} </h2>
 
+		        {/*no of games, win, and loses, and percentage*/}
 				<h3 style={recordStyle}>No of Games: {totalNo}, Won :{winNo} Lost : {loseNo} <br/>
 				 Winning Percent : {winningPercent}%</h3>
+		        {/*game reset button*/}
 				<form onSubmit={this.reset}>
 					<button className="button1" type="submit">Reset</button>
 				</form>
