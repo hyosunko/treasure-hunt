@@ -32,12 +32,12 @@
 
 {/*board cell*/}
 .square-container{
-  display: grid;
+/*  display: grid;
   height: 150px;
   width: 150px;
   border:1px solid black;
   align-items: center;
-  font-size: 4em;
+  font-size: 2em;*/
   background-color: beige;
   cursor: pointer;
 }

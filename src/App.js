@@ -12,22 +12,52 @@ class App extends Component {
       cellId: 999,
       clickCounter: 5,
       colWidthArray : [],
+      squareFontSize : '3em',
       cellDisplayContent: [],
       cellStatus: [],
       record:[0,0],
-      clickedCellArray:[]
+      clickedCellArray:[],
+      screenWidth : 700,
+      minBoxSize : 100,
+      maxBoxSize : 250
     }
+
   }
 
+  //function to get screen width
+
+  // console.log("inside func", getScreenWidth())
+
+  getScreenWidth=()=>{  
+     var de = document.body.parentNode;
+     var db = document.body;
+     if(window.opera) return db.clientWidth;
+     if (document.compatMode=='CSS1Compat') return de.clientWidth;
+     else return db.clientWidth;
+  }
+
+
   componentDidMount(){
-    let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent,colWidthArray} = this.state;
+    let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent,colWidthArray, screenWidth, minBoxSize, maxBoxSize} = this.state;
     //initializes board data
     //fills cell status data with 0
     cellStatus = Array(boardWidth*boardHeight).fill(0);
+    // set up screen width on browser
+    
+    screenWidth= this.getScreenWidth()
+   
+
+   let boxSize = Math.ceil(screenWidth/(boardWidth+2))
+   if(boxSize > maxBoxSize){
+    boxSize = maxBoxSize
+   } else if (boxSize < minBoxSize){
+    boxSize = minBoxSize
+   }
+   console.log("boxSize", boxSize)
     //fills cell display data with "?"
     cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
     //fills col size data by board width
-    colWidthArray = Array(boardWidth).fill("150px");
+    colWidthArray = Array(boardWidth).fill(boxSize+"px");
 
     //intializes treasure, bomb position & game counter
     //selects random treasure position between 0 to length of board
@@ -49,12 +79,16 @@ class App extends Component {
       }
     }
 
+
+    this.setState({colWidthArray:colWidthArray, cellStatus:cellStatus, cellDisplayContent:cellDisplayContent, clickCounter:clickCounter, screenWidth:screenWidth})
+
     console.log("noOfBomb: ",noOfBomb)
     console.log("colWidthArray: ", colWidthArray)
     console.log("cellStatus: ", cellStatus)
+    console.log("screenWidth: after ", screenWidth)
 
-    this.setState({colWidthArray:colWidthArray, cellStatus:cellStatus, cellDisplayContent:cellDisplayContent, clickCounter:clickCounter})
   }
+
 
   //cell clicked event hanlding function
   handleChange= e =>{
@@ -152,16 +186,26 @@ class App extends Component {
   // resets board data
   resizeBoard=()=>{
 
-    let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent,colWidthArray, clickedCellArray} = this.state;
+    let {boardWidth,boardHeight, clickCounter, cellStatus, cellDisplayContent,colWidthArray, clickedCellArray, screenWidth, minBoxSize, maxBoxSize} = this.state;
     boardWidth=parseInt(document.getElementById("width").value);
     boardHeight=parseInt(document.getElementById("height").value);
     //initializes board data
     //fills cell status data with 0
     cellStatus = Array(boardWidth*boardHeight).fill(0);
     //fills cell display data with "?"
+
+    screenWidth= this.getScreenWidth()
+   
+   let boxSize = Math.ceil(screenWidth/(boardWidth+2))
+   if(boxSize > maxBoxSize){
+    boxSize = maxBoxSize
+   } else if (boxSize < minBoxSize){
+    boxSize = minBoxSize
+   }
+
     cellDisplayContent = Array(boardWidth*boardHeight).fill("❓");
     //fills col size data by board width
-    colWidthArray = Array(boardWidth).fill("150px");
+    colWidthArray = Array(boardWidth).fill(boxSize+"px");
 
     //intializes treasure, bomb position & game counter
     //selects random treasure position between 0 to length of board
@@ -202,6 +246,7 @@ class App extends Component {
 
     // create column grid data
     var colDataStr = this.state.colWidthArray.join(" ")
+    console.log("colWidthArray in App", this.state.colWidthArray)
 
     // setup inline style data
     let columnStyle = {
@@ -214,7 +259,7 @@ class App extends Component {
     // create board data
     let boardCell = this.state.cellStatus.map((v,i)=>{
       return(
-        <Square id={i} currentSpace={this.state.cellStatus[i]} cellDisplayContentStatus={this.state.cellDisplayContent[i]} handleChangeFunc={this.handleChange}  />
+        <Square id={i} currentSpace={this.state.cellStatus[i]} cellDisplayContentStatus={this.state.cellDisplayContent[i]} handleChangeFunc={this.handleChange}  colWidthArray={this.state.colWidthArray} data={this.state}/>
         )
     })
       return (
