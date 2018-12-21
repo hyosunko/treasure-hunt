@@ -18,8 +18,8 @@ class App extends Component {
       record:[0,0],
       clickedCellArray:[],
       screenWidth : 700,
-      minBoxSize : 100,
-      maxBoxSize : 250
+      minBoxSize : 80,
+      maxBoxSize : 200
     }
 
   }
