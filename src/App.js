@@ -19,7 +19,7 @@ class App extends Component {
       clickedCellArray:[],
       screenWidth : 700,
       minBoxSize : 80,
-      maxBoxSize : 200
+      maxBoxSize : 150
     }
 
   }
