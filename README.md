@@ -9,7 +9,8 @@
 
 ### Screenshot
 
-<img src="https://github.com/hyosunko/hyosunko.github.io/blob/master/img/treasure-hunt.PNG" width="100">
+<a href="https://hyosunko.github.io/treasure-hunt/">
+<<img src="https://github.com/hyosunko/hyosunko.github.io/blob/master/img/treasure-hunt.PNG" width="400"></a>
 
 
 
