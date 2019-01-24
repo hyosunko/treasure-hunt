@@ -1,13 +1,10 @@
 
 # React Treasure Hunt!
-=====================
+----------------------
 
-## Available Scripts
+resizable treasure hunt game built with React.
 
-
-[Worknig version of this program](https://hyosunko.github.io/treasure-hunt/)
-
-### Screenshot
+## Live Demo
 
 <a href="https://hyosunko.github.io/treasure-hunt/">
 <img src="https://github.com/hyosunko/hyosunko.github.io/blob/master/img/treasure-hunt.PNG" width="400"></a>
