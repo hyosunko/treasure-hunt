@@ -9,7 +9,7 @@
 
 ### Screenshot
 
-![Screenshot](https://github.com/hyosunko/hyosunko.github.io/blob/master/img/treasure-hunt.PNG =100x100)
+<img src="https://github.com/hyosunko/hyosunko.github.io/blob/master/img/treasure-hunt.PNG" width="100">
 
 
 
